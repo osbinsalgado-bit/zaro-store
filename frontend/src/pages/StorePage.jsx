@@ -3,10 +3,10 @@ import { db } from '../firebase/config';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
-import { ProductDetail } from '../components/home/ProductDetail';
+import { ProductDetail } from '../components/store/ProductDetail';
 import { useCart } from '../context/CartContext'; 
 
-export function StorePage() {
+export function StorePage () {
   const[products, setProducts] = useState([]);
   const [slides, setSlides] = useState([]);
   const[loading, setLoading] = useState(true);
