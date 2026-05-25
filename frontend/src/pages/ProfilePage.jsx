@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { db, auth, storage } from '../firebase/config';
 import { doc, onSnapshot, query, collection, where, orderBy, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { deleteUser, sendPasswordResetEmail } from 'firebase/auth';
+import { deleteUser, sendPasswordResetEmail, onAuthStateChanged } from 'firebase/auth';
 import { 
   Package, Mail, CheckCircle, Truck, RefreshCw, XCircle, Camera, Gift, UserIcon, 
   Save, MapPin, Building, CreditCard, AlertTriangle, ShieldCheck, Key, Star, Trash2, 
@@ -16,22 +16,35 @@ export function ProfilePage() {
   const [orders, setOrders] = useState([]);
   const [activeTab, setActiveTab] = useState('perfil'); // 'perfil', 'direcciones', 'pedidos'
   
-  useEffect(() => {
-    if (!auth.currentUser) return;
-    
-    // Suscripción al Perfil
-    const unsubscribeUser = onSnapshot(doc(db, 'users', auth.currentUser.uid), snap => {
-      setUserData({ id: snap.id, ...snap.data() });
-    });
-    
-    // Suscripción a los Pedidos
-    const qOrders = query(collection(db, 'orders'), where('client_id', '==', auth.currentUser.uid), orderBy('created_at', 'desc'));
-    const unsubscribeOrders = onSnapshot(qOrders, snap => {
-      setOrders(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    });
+    useEffect(() => {
+        let unsubscribeUser = () => {};
+        let unsubscribeOrders = () => {};
 
-    return () => { unsubscribeUser(); unsubscribeOrders(); };
-  }, []);
+        const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                setUserData(null);
+                setOrders([]);
+                return;
+            }
+
+            // Suscripción al Perfil
+            unsubscribeUser = onSnapshot(doc(db, 'users', user.uid), snap => {
+                setUserData({ id: snap.id, ...snap.data() });
+            });
+
+            // Suscripción a los Pedidos
+            const qOrders = query(collection(db, 'orders'), where('client_id', '==', user.uid), orderBy('created_at', 'desc'));
+            unsubscribeOrders = onSnapshot(qOrders, snap => {
+                setOrders(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+            });
+        });
+
+        return () => {
+            try { unsubscribeAuth(); } catch (e) {}
+            try { unsubscribeUser(); } catch (e) {}
+            try { unsubscribeOrders(); } catch (e) {}
+        };
+    }, []);
 
   const handleProfilePhotoUpload = async (e) => {
     const selectedFile = e.target.files[0];
