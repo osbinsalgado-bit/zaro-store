@@ -1,0 +1,9 @@
+@import "tailwindcss";
+body {
+  background: linear-gradient(135deg, #0f172a, #1e1b4b, #312e81);
+  background-size: 400% 400%;
+  animation: bg-move 20s ease infinite;
+  min-height: 100vh;
+  color: white;
+}
+@keyframes bg-move { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
