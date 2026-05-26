@@ -123,11 +123,11 @@ export function MainLayout () {
                     )}
 
                     {userRole === 'proveedor' && (
-                      <SidebarLink to="/?tab=proveedor" icon={Briefcase} text="Gestión de Proveedor" highlight close={() => setSidebarOpen(false)}/>
+                      <SidebarLink to="/provider" icon={Briefcase} text="Gestión de Proveedor" highlight close={() => setSidebarOpen(false)}/>
                     )}
 
                     {(userRole === 'vendedor' || userRole === 'empleado') && (
-                      <SidebarLink to="/?tab=vendedor" icon={Tag} text="Panel de Ventas / Afiliado" highlight close={() => setSidebarOpen(false)}/>
+                      <SidebarLink to="/seller" icon={Tag} text="Panel de Ventas / Afiliado" highlight close={() => setSidebarOpen(false)}/>
                     )}
                   </div>
                 )}

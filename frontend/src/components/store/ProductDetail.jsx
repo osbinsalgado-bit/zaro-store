@@ -1,4 +1,4 @@
-// src/components/home/ProductDetail.jsx
+
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ShoppingBag, Plus, Minus, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
@@ -156,7 +156,7 @@ export function ProductDetail({ product, onClose }) {
                 {/* INFO BOX - SOLO EN DESKTOP, EN MOVIL VA DESPUÉS DEL BOTÓN */}
                 <div className="hidden md:block p-3 md:p-5 bg-white rounded-xl md:rounded-[2rem] border border-slate-100 shadow-sm space-y-1 md:space-y-2">
                    <p className="text-[8px] md:text-[9px] font-black uppercase text-slate-400 tracking-widest border-b border-slate-50 pb-1 md:pb-2">Información:</p>
-                   <p className="text-[9px] md:text-xs text-slate-600 font-bold leading-relaxed">{product.description}</p>
+                   <p className="text-[9px] md:text-xs text-slate-600 font-bold leading-relaxed whitespace-pre-wrap">{product.description}</p>
                 </div>
              </div>
 
@@ -182,7 +182,7 @@ export function ProductDetail({ product, onClose }) {
       <div className="md:hidden px-3 pb-24 pt-4 space-y-3">
         <div className="p-3 bg-white rounded-xl border border-slate-100 shadow-sm space-y-1">
            <p className="text-[8px] font-black uppercase text-slate-400 tracking-widest border-b border-slate-50 pb-1">Información del Producto:</p>
-           <p className="text-[9px] text-slate-600 font-bold leading-relaxed">{product.description}</p>
+           <p className="text-[9px] md:text-xs text-slate-600 font-bold leading-relaxed whitespace-pre-wrap">{product.description}</p>
         </div>
       </div>
 
