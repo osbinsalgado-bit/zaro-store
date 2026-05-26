@@ -60,6 +60,19 @@ export function ProfilePage() {
     }
   }
 
+  const handleCancelOrder = async (orderId) => {
+    if(!window.confirm("¿Estás seguro que deseas cancelar este pedido? Esta acción es irreversible.")) return;
+    try {
+        await updateDoc(doc(db, 'orders', orderId), { 
+            status: 'Cancelado', 
+            payment_status: 'Cancelado por Cliente' 
+        });
+        alert("Pedido cancelado exitosamente.");
+    } catch(err) {
+        alert("Hubo un error al cancelar el pedido.");
+    }
+  }
+
   if (!userData) return <div className="p-24 text-center font-black uppercase text-slate-300 italic tracking-[0.4em] animate-pulse">Cargando Perfil...</div>;
 
   return (
@@ -381,6 +394,13 @@ function OrdersList({ orders }) {
                                 }} className="w-full bg-green-500 hover:bg-green-600 transition-colors py-3.5 mt-2 rounded-2xl shadow-md text-white font-bold text-xs uppercase tracking-wider flex justify-center items-center gap-2">
                                     <CheckCircle size={16}/> Reportar pago en WhatsApp
                                 </button>
+                                {(order.status === 'Verificando Pago' || order.status === 'Solicitado') && statusData.level !== -1 && (
+                                    <button 
+                                        onClick={() => handleCancelOrder(order.id)} 
+                                        className="w-full mt-3 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors py-3 rounded-2xl font-bold text-xs uppercase tracking-wider flex justify-center items-center gap-2">
+                                        <XCircle size={16}/> Cancelar mi pedido
+                                    </button>
+                                )}
                             </div>
                         </div>
                     )}

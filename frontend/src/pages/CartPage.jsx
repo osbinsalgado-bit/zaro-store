@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  ShoppingBag, Plus, Minus, Tag, Check, CheckSquare, Square, MapPin, CheckCircle
+  ShoppingBag, Plus, Minus, Tag, Check, CheckSquare, Square, MapPin, CheckCircle, Trash2
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -11,7 +11,7 @@ import { doc, getDoc, collection, query, where, getDocs, writeBatch, serverTimes
 import { useNavigate } from 'react-router-dom';
 
 export function CartPage() {
-  const { cart, updateQuantity, clearCart } = useCart();
+  const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -241,9 +241,10 @@ export function CartPage() {
                         </div>
 
                         <div className="flex bg-white items-center gap-3 border border-slate-200 shadow-sm p-1.5 rounded-[1rem] ml-auto">
-                          <button onClick={()=>updateQuantity(item.id, item.selectedSize, -1, 99)} className="text-slate-400 bg-slate-50 hover:bg-slate-100 transition rounded-lg p-2"><Minus size={14}/></button>
+                          <button onClick={(e)=>{ e.stopPropagation(); removeFromCart(item.id, item.selectedSize); }} className="text-red-400 bg-red-50 hover:bg-red-500 hover:text-white transition rounded-lg p-2 mr-1"><Trash2 size={14}/></button>
+                          <button onClick={(e)=>{ e.stopPropagation(); updateQuantity(item.id, item.selectedSize, -1, 99); }} className="text-slate-400 bg-slate-50 hover:bg-slate-100 transition rounded-lg p-2"><Minus size={14}/></button>
                           <span className="font-black text-sm w-4 text-center">{item.quantity}</span>
-                          <button onClick={()=>updateQuantity(item.id, item.selectedSize, 1, item.inventory.find(szf=>szf.size === item.selectedSize)?.qty||0)} className="text-slate-600 bg-slate-50 hover:bg-slate-100 transition rounded-lg p-2"><Plus size={14}/></button>
+                          <button onClick={(e)=>{ e.stopPropagation(); const maxStock = item.inventory?.find(sz => sz.size === item.selectedSize)?.qty || 0; updateQuantity(item.id, item.selectedSize, 1, maxStock); }} className="text-slate-600 bg-slate-50 hover:bg-slate-100 transition rounded-lg p-2"><Plus size={14}/></button>
                         </div>
                      </div>
                   )
